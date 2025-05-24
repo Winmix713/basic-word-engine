@@ -2,19 +2,21 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import path from "path";
-
-import vitePluginInjectDataLocator from "./plugins/vite-plugin-inject-data-locator";
+import { componentTagger } from "lovable-tagger";
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), vitePluginInjectDataLocator()],
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    react(),
+    mode === 'development' && componentTagger(),
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
   server: {
+    host: "::",
     port: 8080,
-    allowedHosts: true,
   },
-});
+}));

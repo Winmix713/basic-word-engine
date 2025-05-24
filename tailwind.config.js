@@ -1,12 +1,9 @@
 
-import { heroui } from "@heroui/react";
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     container: {
@@ -67,19 +64,6 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)'
       },
-      rotate: {
-        '15': '15deg',
-        '30': '30deg',
-        'minus-30': '-30deg',
-        'y-90': 'rotateY(90deg)',
-        'y-minus-90': 'rotateY(-90deg)',
-        'y-180': 'rotateY(180deg)',
-        'x-90': 'rotateX(90deg)',
-        'x-minus-90': 'rotateX(-90deg)',
-      },
-      translate: {
-        'z-40px': 'translateZ(40px)',
-      },
       keyframes: {
         'accordion-down': {
           from: {
@@ -105,5 +89,5 @@ export default {
     },
   },
   darkMode: "class",
-  plugins: [heroui(), require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate")],
 };
