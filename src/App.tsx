@@ -1,46 +1,27 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import HomePage from './pages/home';
-import { EditorPage } from './pages/editor';
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from "@heroui/react";
-import { Icon } from '@iconify/react';
-import { CardManagerProvider } from './context/card-manager-context'; // Fixed import path from './pages/editor/card-manager-context'
-import { UndoRedoProvider } from './pages/editor/undo-redo-context'; // Updated import path
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
 
-function App() {
-  return (
-    <Router>
-      <div className="min-h-screen bg-gradient-to-br from-[#1e1e2e] to-[#0d0d21]">
-        <Navbar maxWidth="xl" className="bg-[#1e1e2e]/80 backdrop-blur-md border-b border-white/10">
-          <NavbarBrand>
-            <Icon icon="lucide:layers" className="text-white text-2xl mr-2" />
-            <p className="font-bold text-white">Extension Cards</p>
-          </NavbarBrand>
-          <NavbarContent className="hidden sm:flex gap-4" justify="center">
-            <NavbarItem>
-              <Link href="/" color="foreground" className="text-white/80 hover:text-white">
-                Home
-              </Link>
-            </NavbarItem>
-            <NavbarItem>
-              <Link href="/editor" color="foreground" className="text-white/80 hover:text-white">
-                Card Editor
-              </Link>
-            </NavbarItem>
-          </NavbarContent>
-        </Navbar>
-        
-        <CardManagerProvider>
-          <UndoRedoProvider>
-            <Switch>
-              <Route exact path="/" component={HomePage} />
-              <Route path="/editor" component={EditorPage} />
-            </Switch>
-          </UndoRedoProvider>
-        </CardManagerProvider>
-      </div>
-    </Router>
-  );
-}
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
