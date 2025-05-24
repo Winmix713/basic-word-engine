@@ -16,6 +16,8 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@heroui/react": "2.7.8",
     "@iconify/react": "latest",
+    "@radix-ui/react-toast": "^1.2.14",
+    "@radix-ui/react-tooltip": "^1.2.7",
     "@tanstack/react-query": "^5.77.0",
     "framer-motion": "^11.18.2",
     "lovable-tagger": "^1.1.8",
@@ -23,6 +25,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "5.3.4",
     "source-map-js": "^1.2.1",
+    "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.0"
   },
