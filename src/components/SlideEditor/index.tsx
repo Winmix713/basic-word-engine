@@ -4,6 +4,7 @@ import { useSlideEditor } from './useSlideEditor';
 import SlideList from './SlideList';
 import SlideCanvas from './SlideCanvas';
 import Toolbar from './Toolbar';
+import KadetiorIntegration from './integration/KadetiorIntegration';
 import { Button } from '../ui/button';
 import { Plus, Save } from 'lucide-react';
 import type { SlideEditorProps } from './types';
@@ -13,11 +14,16 @@ const SlideEditor: React.FC<SlideEditorProps> = ({ initialState }) => {
   const { presentation, ui } = state;
   const currentSlide = presentation.slides[ui.currentSlideIndex] || null;
 
+  const handleKadetiorIntegration = (data: any) => {
+    console.log('Kadetior integration data:', data);
+    // Integration logic here
+  };
+
   return (
     <div className="h-screen flex">
       {/* Sidebar */}
       <div className="w-64 border-r bg-muted/10 flex flex-col">
-        <div className="p-4 border-b">
+        <div className="p-4 border-b space-y-2">
           <Button 
             className="w-full"
             onClick={actions.addSlide}
@@ -25,6 +31,7 @@ const SlideEditor: React.FC<SlideEditorProps> = ({ initialState }) => {
             <Plus className="h-4 w-4 mr-2" />
             New Slide
           </Button>
+          <KadetiorIntegration onIntegrationUpdate={handleKadetiorIntegration} />
         </div>
         <SlideList
           slides={presentation.slides}
