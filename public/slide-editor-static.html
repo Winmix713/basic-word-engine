@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlideEditor - Statikus Layout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #fafafa;
+            color: #1f2937;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .editor-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 256px;
+            background-color: #f9fafb;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 150ms ease;
+            height: 40px;
+            padding: 0 16px;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #374151;
+        }
+
+        .btn-outline {
+            background-color: white;
+            border: 1px solid #d1d5db;
+            color: #374151;
+        }
+
+        .btn-outline:hover {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .btn-sm {
+            height: 32px;
+            font-size: 13px;
+        }
+
+        .slide-list {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .slide-list-empty {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            padding: 32px 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .presentation-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            border-bottom: 1px solid #e5e7eb;
+            background-color: white;
+        }
+
+        .toolbar-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            border: none;
+            background: transparent;
+            color: #374151;
+            cursor: pointer;
+            transition: background-color 150ms ease;
+        }
+
+        .toolbar-btn:hover {
+            background-color: #f3f4f6;
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 16px;
+            background-color: #e5e7eb;
+            margin: 0 8px;
+        }
+
+        /* Canvas Area */
+        .canvas-area {
+            flex: 1;
+            overflow: auto;
+            padding: 32px;
+            background-color: #f1f5f9;
+        }
+
+        .slide-canvas {
+            max-width: 1024px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            position: relative;
+        }
+
+        .slide-content {
+            padding: 32px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: #1f2937;
+        }
+
+        .slide-subtitle {
+            font-size: 24px;
+            color: #6b7280;
+            margin-bottom: 32px;
+        }
+
+        .slide-body {
+            flex: 1;
+            font-size: 18px;
+            color: #374151;
+        }
+
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        /* Icons (SVG) */
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .canvas-area {
+                padding: 16px;
+            }
+            
+            .slide-content {
+                padding: 16px;
+            }
+            
+            .slide-title {
+                font-size: 24px;
+            }
+            
+            .slide-subtitle {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <button class="btn btn-primary">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                    New Slide
+                </button>
+                <button class="btn btn-outline btn-sm">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                    Kadetior Integration
+                </button>
+            </div>
+            <div class="slide-list">
+                <div class="slide-list-empty">
+                    No slides yet. Click "New Slide" to add one.
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="main-header">
+                <h1 class="presentation-title">Untitled Presentation</h1>
+                <button class="btn btn-outline">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17,21 17,13 7,13 7,21"/>
+                        <polyline points="7,3 7,8 15,8"/>
+                    </svg>
+                    Save
+                </button>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <button class="toolbar-btn" title="Bold">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                        <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" title="Italic">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="4" x2="10" y2="4"/>
+                        <line x1="14" y1="20" x2="5" y2="20"/>
+                        <line x1="15" y1="4" x2="9" y2="20"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" title="Underline">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"/>
+                        <line x1="4" y1="21" x2="20" y2="21"/>
+                    </svg>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn" title="Align Left">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="17" y1="10" x2="3" y2="10"/>
+                        <line x1="21" y1="6" x2="3" y2="6"/>
+                        <line x1="21" y1="14" x2="3" y2="14"/>
+                        <line x1="17" y1="18" x2="3" y2="18"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" title="Align Center">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="10" x2="6" y2="10"/>
+                        <line x1="21" y1="6" x2="3" y2="6"/>
+                        <line x1="21" y1="14" x2="3" y2="14"/>
+                        <line x1="18" y1="18" x2="6" y2="18"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" title="Align Right">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="21" y1="10" x2="7" y2="10"/>
+                        <line x1="21" y1="6" x2="3" y2="6"/>
+                        <line x1="21" y1="14" x2="3" y2="14"/>
+                        <line x1="21" y1="18" x2="7" y2="18"/>
+                    </svg>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="toolbar-btn" title="Bullet List">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/>
+                        <line x1="8" y1="12" x2="21" y2="12"/>
+                        <line x1="8" y1="18" x2="21" y2="18"/>
+                        <line x1="3" y1="6" x2="3.01" y2="6"/>
+                        <line x1="3" y1="12" x2="3.01" y2="12"/>
+                        <line x1="3" y1="18" x2="3.01" y2="18"/>
+                    </svg>
+                </button>
+                <button class="toolbar-btn" title="Numbered List">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="10" y1="6" x2="21" y2="6"/>
+                        <line x1="10" y1="12" x2="21" y2="12"/>
+                        <line x1="10" y1="18" x2="21" y2="18"/>
+                        <path d="M4 6h1v4"/>
+                        <path d="M4 10h2"/>
+                        <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1.5S2 14 2 15"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Canvas Area -->
+            <div class="canvas-area">
+                <div class="slide-canvas">
+                    <div class="empty-state">
+                        Select a slide to edit
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
